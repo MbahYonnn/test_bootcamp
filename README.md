@@ -1,6 +1,8 @@
 # todo_app
 
-A new Flutter project.
+untuk test bootcamp.
+Logic tes ada pada folder logic_test/pal.dart
+Jsonmanipulation ada pada folder json_manipulation/jsonmanip.dart
 
 ## Getting Started
 
