@@ -1,11 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:todo_app/pages/setting_page.dart';
 import 'package:todo_app/utils/authentication.dart';
 import 'package:todo_app/widgets/placeholder_widget.dart';
 import 'sign_in_screen.dart';
+import 'package:todo_app/pages/task_page.dart';
+import 'package:todo_app/utils/font_style.dart';
 
 var blue = Color(0xf0442D0);
 var yellow = Color(0xFABE2C);
+var now = DateTime.now();
+final List<String> entries = <String>[
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+];
+List todos = [
+  "Kuda",
+  "Ayam",
+  "Kucing",
+  "Sapi",
+];
+
+final List<int> colorCodes = <int>[600, 500, 100];
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})
@@ -21,7 +45,6 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   late User _user;
   int _currentIndex = 0;
-  bool _isSigningOut = false;
 
   Route _routeToSignInScreen() {
     return PageRouteBuilder(
@@ -45,7 +68,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   @override
   void initState() {
     _user = widget._user;
-
     super.initState();
   }
 
@@ -54,6 +76,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       _currentIndex = index;
     });
   }
+
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+  final screens = [
+    Task(),
+    Text(
+      'Add',
+      style: optionStyle,
+    ),
+    SettingPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -105,125 +138,121 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               icon: Icon(Icons.menu),
               label: 'Task',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Add',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: 'Setting',
             )
           ]),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            bottom: 20.0,
-          ),
-          
-
-          // child: Column(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Row(),
-          //     _user.photoURL != null
-          //         ? ClipOval(
-          //             child: Material(
-          //               color: Colors.grey.withOpacity(0.3),
-          //               child: Image.network(
-          //                 _user.photoURL!,
-          //                 fit: BoxFit.fitHeight,
-          //               ),
-          //             ),
-          //           )
-          //         : ClipOval(
-          //             child: Material(
-          //               color: Colors.grey.withOpacity(0.3),
-          //               child: Padding(
-          //                 padding: const EdgeInsets.all(16.0),
-          //                 child: Icon(
-          //                   Icons.person,
-          //                   size: 60,
-          //                   color: Colors.grey,
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //     SizedBox(height: 16.0),
-          //     Text(
-          //       'Hello',
-          //       style: TextStyle(
-          //         color: Colors.grey,
-          //         fontSize: 26,
-          //       ),
-          //     ),
-          //     SizedBox(height: 8.0),
-          //     Text(
-          //       _user.displayName!,
-          //       style: TextStyle(
-          //         color: Colors.yellow,
-          //         fontSize: 26,
-          //       ),
-          //     ),
-          //     SizedBox(height: 8.0),
-          //     Text(
-          //       '( ${_user.email!} )',
-          //       style: TextStyle(
-          //         color: Colors.orange,
-          //         fontSize: 20,
-          //         letterSpacing: 0.5,
-          //       ),
-          //     ),
-          //     SizedBox(height: 24.0),
-          //     Text(
-          //       'You are now signed in using your Google account. To sign out of your account click the "Sign Out" button below.',
-          //       style: TextStyle(
-          //           color: Colors.grey.withOpacity(0.8),
-          //           fontSize: 14,
-          //           letterSpacing: 0.2),
-          //     ),
-          //     SizedBox(height: 16.0),
-          //     _isSigningOut
-          //         ? CircularProgressIndicator(
-          //             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          //           )
-          //         : ElevatedButton(
-          //             style: ButtonStyle(
-          //               backgroundColor: MaterialStateProperty.all(
-          //                 Colors.redAccent,
-          //               ),
-          //               shape: MaterialStateProperty.all(
-          //                 RoundedRectangleBorder(
-          //                   borderRadius: BorderRadius.circular(10),
-          //                 ),
-          //               ),
-          //             ),
-          //             onPressed: () async {
-          //               setState(() {
-          //                 _isSigningOut = true;
-          //               });
-          //               await Authentication.signOut(context: context);
-          //               setState(() {
-          //                 _isSigningOut = false;
-          //               });
-          //               Navigator.of(context)
-          //                   .pushReplacement(_routeToSignInScreen());
-          //             },
-          //             child: Padding(
-          //               padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-          //               child: Text(
-          //                 'Sign Out',
-          //                 style: TextStyle(
-          //                   fontSize: 20,
-          //                   fontWeight: FontWeight.bold,
-          //                   color: Colors.white,
-          //                   letterSpacing: 2,
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //   ],
-          // ),
-        ),
+        child: Container(child: screens[_currentIndex]),
       ),
     );
+
+    // child: Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     Row(),
+    //     _user.photoURL != null
+    //         ? ClipOval(
+    //             child: Material(
+    //               color: Colors.grey.withOpacity(0.3),
+    //               child: Image.network(
+    //                 _user.photoURL!,
+    //                 fit: BoxFit.fitHeight,
+    //               ),
+    //             ),
+    //           )
+    //         : ClipOval(
+    //             child: Material(
+    //               color: Colors.grey.withOpacity(0.3),
+    //               child: Padding(
+    //                 padding: const EdgeInsets.all(16.0),
+    //                 child: Icon(
+    //                   Icons.person,
+    //                   size: 60,
+    //                   color: Colors.grey,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //     SizedBox(height: 16.0),
+    //     Text(
+    //       'Hello',
+    //       style: TextStyle(
+    //         color: Colors.grey,
+    //         fontSize: 26,
+    //       ),
+    //     ),
+    //     SizedBox(height: 8.0),
+    //     Text(
+    //       _user.displayName!,
+    //       style: TextStyle(
+    //         color: Colors.yellow,
+    //         fontSize: 26,
+    //       ),
+    //     ),
+    //     SizedBox(height: 8.0),
+    //     Text(
+    //       '( ${_user.email!} )',
+    //       style: TextStyle(
+    //         color: Colors.orange,
+    //         fontSize: 20,
+    //         letterSpacing: 0.5,
+    //       ),
+    //     ),
+    //     SizedBox(height: 24.0),
+    //     Text(
+    //       'You are now signed in using your Google account. To sign out of your account click the "Sign Out" button below.',
+    //       style: TextStyle(
+    //           color: Colors.grey.withOpacity(0.8),
+    //           fontSize: 14,
+    //           letterSpacing: 0.2),
+    //     ),
+    //     SizedBox(height: 16.0),
+    //     _isSigningOut
+    //         ? CircularProgressIndicator(
+    //             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+    //           )
+    //         : ElevatedButton(
+    //             style: ButtonStyle(
+    //               backgroundColor: MaterialStateProperty.all(
+    //                 Colors.redAccent,
+    //               ),
+    //               shape: MaterialStateProperty.all(
+    //                 RoundedRectangleBorder(
+    //                   borderRadius: BorderRadius.circular(10),
+    //                 ),
+    //               ),
+    //             ),
+    //             onPressed: () async {
+    //               setState(() {
+    //                 _isSigningOut = true;
+    //               });
+    //               await Authentication.signOut(context: context);
+    //               setState(() {
+    //                 _isSigningOut = false;
+    //               });
+    //               Navigator.of(context)
+    //                   .pushReplacement(_routeToSignInScreen());
+    //             },
+    //             child: Padding(
+    //               padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+    //               child: Text(
+    //                 'Sign Out',
+    //                 style: TextStyle(
+    //                   fontSize: 20,
+    //                   fontWeight: FontWeight.bold,
+    //                   color: Colors.white,
+    //                   letterSpacing: 2,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //   ],
+    // ),
   }
 }

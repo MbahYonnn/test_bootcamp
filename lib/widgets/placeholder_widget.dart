@@ -8,7 +8,7 @@ class PlaceholderWidget extends StatelessWidget {
  @override
  Widget build(BuildContext context) {
    return Container(
-     color: color,
+     color: color ,
    );
  }
 }
